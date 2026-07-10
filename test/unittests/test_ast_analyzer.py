@@ -1,5 +1,7 @@
 """Unit tests for the AST-based skill analyzer."""
 
+import warnings
+
 import pytest
 
 from ovos_localize.analyzers.ast_analyzer import SkillAnalyzer, SkillAnalysis
@@ -198,3 +200,21 @@ class MySkill(OVOSSkill):
 '''
         result = self.analyzer.analyze_source(source)
         assert result.dialog_calls[0].variables == ["name"]
+
+    def test_padatious_intent_handler_no_ast_str_deprecation(self) -> None:
+        """ast.Str is removed on Python 3.12+ (AttributeError, not just a
+        DeprecationWarning); the padatious-intent-file case must use
+        ast.Constant only."""
+        source = '''
+from ovos_workshop.decorators import intent_handler
+from ovos_workshop.skills.ovos import OVOSSkill
+
+class TestSkill(OVOSSkill):
+    @intent_handler("hello.intent")
+    def handle_hello(self, message):
+        pass
+'''
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", DeprecationWarning)
+            result = self.analyzer.analyze_source(source)
+        assert result.intent_handlers[0].intent_file == "hello.intent"
