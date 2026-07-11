@@ -1,13 +1,9 @@
 """Unit tests for the repo scanner / locale directory scanner."""
 
-import os
-import tempfile
 from pathlib import Path
 
-import pytest
-
 from ovos_localize.enums import FileType
-from ovos_localize.sync.github import scan_locale_directory, RepoScanner
+from ovos_localize.sync.github import RepoScanner, scan_locale_directory
 
 
 class TestScanLocaleDirectory:

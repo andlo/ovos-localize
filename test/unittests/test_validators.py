@@ -1,13 +1,12 @@
 """Unit tests for validation rules."""
 
-import pytest
 
-from ovos_localize.parsers.intent import IntentParser
-from ovos_localize.parsers.vocab import VocabParser
 from ovos_localize.parsers.dialog import DialogParser
 from ovos_localize.parsers.entity import EntityParser
+from ovos_localize.parsers.intent import IntentParser
 from ovos_localize.parsers.regex import RegexParser
 from ovos_localize.parsers.value import ValueParser
+from ovos_localize.parsers.vocab import VocabParser
 from ovos_localize.validators.rules import (
     validate_dialog,
     validate_entity,
@@ -39,7 +38,7 @@ class TestIntentValidation:
     def test_min_lines_with_alternatives(self) -> None:
         """Templates with (a|b|c) alternatives expand to enough sentences."""
         # 3 templates × 4 alternatives each = 12 expanded sentences → passes
-        content = "(tell|show|give) me the (weather|forecast|temperature|conditions)\nwhat is the (weather|forecast)\nhow is the weather"
+        content = "(tell|show|give) me the (weather|forecast|temperature|conditions)\nwhat is the (weather|forecast)\nhow is the weather"  # noqa: E501
         parsed = IntentParser().parse_content(content)
         issues = validate_intent(parsed)
         assert not any(i.rule_name == "intent.min_lines" for i in issues)
