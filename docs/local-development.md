@@ -154,3 +154,15 @@ for f in scan.locale_files:
         if card.tips:
             print(f"  Tips: {card.tips[0]}")
 ```
+
+## SEO
+
+The landing page carries full metadata for search and social unfurl: a meta
+description, canonical URL, Open Graph + Twitter card tags, and a `WebSite`
+JSON-LD block. `robots.txt` and `sitemap.xml` are served at the site root, and
+`route()` sets a per-view `document.title`.
+
+Because the app is hash-routed, only the landing page is a real crawlable URL.
+Making the dashboard, stats, and per-skill status views independently
+indexable (real static paths generated at data-refresh time, with per-skill
+descriptions and a full sitemap) is a build-pipeline follow-up.
