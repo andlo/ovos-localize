@@ -1,11 +1,36 @@
 """Unit tests for language utilities."""
 
+import pytest
+
 from ovos_localize.lang_utils import (
+    is_rtl,
     normalize_lang_code,
     merge_equivalent_langs,
     lang_display_name,
     lang_display_name_native,
 )
+
+
+class TestIsRtl:
+    """Tests for is_rtl()."""
+
+    @pytest.mark.parametrize("code", [
+        "ar", "ar-EG", "AR", "fa", "fa-IR", "he", "he-IL",
+        "ur", "ur-PK", "ps", "sd", "ug", "dv", "yi", "ckb",
+    ])
+    def test_rtl_languages(self, code: str) -> None:
+        """Right-to-left languages are detected regardless of region/case."""
+        assert is_rtl(code) is True
+
+    @pytest.mark.parametrize("code", [
+        "en", "en-US", "de-DE", "fr-FR", "pt-BR", "zh-CN",
+        "kab",  # Kabyle: Latin script, LTR — must never be flagged RTL
+        "ber",  # Berber / Tifinagh script is LTR
+        "", "zzz",
+    ])
+    def test_ltr_languages(self, code: str) -> None:
+        """Left-to-right (and unknown/empty) codes are not RTL."""
+        assert is_rtl(code) is False
 
 
 class TestNormalizeLangCode:
